@@ -1,0 +1,45 @@
+.MODEL SMALL
+.STACK 100H
+.DATA                
+VAR DB 5
+VAR1 DB 3
+.CODE
+MAIN PROC  
+    ; swaping number using variable
+    MOV AX , @DATA 
+    MOV DS ,AX 
+    MOV AL , VAR
+   
+    MOV DL,AL
+    ADD DL, 48
+    MOV AH ,02H
+    INT 21H 
+     MOV DL, 2CH      ; ASCII value of comma
+    MOV AH, 02H      ; DOS interrupt to display character
+    INT 21H
+     MOV AH, VAR1  
+   MOV DL, AH
+   ADD DL ,48
+   MOV AH, 02H
+   INT 21H 
+    MOV DL, 2CH      
+    MOV AH, 02H     
+    INT 21H  
+     MOV AL , VAR1
+   
+    MOV DL,AL
+    ADD DL, 48
+    MOV AH ,02H
+    INT 21H 
+     MOV DL, 2CH  
+     MOV AH, 02H   
+    INT 21H
+     MOV AH, VAR  
+   MOV DL, AH
+   ADD DL ,48
+   MOV AH, 02H
+   INT 21H 
+    END MAIN 
+    MAIN ENDP
+                  
+
