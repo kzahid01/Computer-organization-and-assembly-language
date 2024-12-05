@@ -1,0 +1,42 @@
+.MODEL SMALL
+.STACK 100H
+.DATA                
+VAR DB 0
+VAR1 DB 2                                                       
+
+.CODE
+MAIN PROC 
+    ;; multiplivation of 2 varialbe and sore in another variable 
+    MOV AX , @DATA 
+    MOV DS ,AX 
+    MOV AL , VAR
+   
+    MOV DL,AL
+    ADD DL, 48
+    MOV AH ,02H
+          INT 21H
+     MOV AH, VAR1  
+   MOV DL, AH
+   ADD DL ,48
+   MOV AH, 02H
+   INT 21H 
+    MOV DL, 2CH      
+    MOV AH, 02H     
+    INT 21H
+     MOV DL, 0DH   ;for print multiplication result on next line
+    MOV AH, 02H
+    INT 21H
+    MOV DL, 0AH       
+    MOV AH, 02H
+    INT 21H  
+     mov al , var 
+   mul var1
+   mov dx , ax
+   add dx,48
+   MOV AH, 02H
+   INT 21H 
+   
+    END MAIN 
+    MAIN ENDP
+                  
+         
