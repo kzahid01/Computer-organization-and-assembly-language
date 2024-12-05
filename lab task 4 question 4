@@ -1,0 +1,37 @@
+.MODEL SMALL
+.STACK 100H
+
+.DATA
+    STAR DB '*$'             
+    NEWLINE DB 0DH, 0AH, '$' ; Newline for the next row
+
+.CODE
+START:
+    MOV AX, @DATA            
+    MOV DS, AX
+
+    MOV CX, 5                
+    MOV BX, 1                ; BX will count the number of stars to print in each row
+
+OUTER_LOOP:
+    PUSH CX                 
+
+    MOV CX, BX               
+INNER_LOOP:
+    MOV AH, 09H
+    LEA DX, STAR             
+    INT 21H
+    LOOP INNER_LOOP          ; Loop to print stars
+
+    MOV AH, 09H
+    LEA DX, NEWLINE          ; Print newline after each row
+    INT 21H
+
+    POP CX                   ; Restore outer loop counter
+    INC BX                   ; Increment BX to print more stars in the next row
+    LOOP OUTER_LOOP          ; Loop for rows
+
+    MOV AH, 4CH              
+    INT 21H
+
+END START
