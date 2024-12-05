@@ -1,0 +1,56 @@
+ include Irvine32.inc
+
+.data
+     multiplicand dword 10011b   
+     multiplier   dword 101b     
+     accumulator  dword 0        
+     Q_1          dword 0        
+     count        dword 32       
+     result       dword ?        
+.code
+     main proc    
+        
+         mov eax, 0          
+         mov ebx, multiplier 
+         mov ecx, count     
+         mov edx, 0          
+
+         multiply_loop:
+              
+               mov esi, ebx      
+               and esi, 1       
+               cmp esi, Q_1     
+    
+               
+               je shift           
+    
+               cmp esi, 0         ; Check if Q0 = 0
+               jne addition       ; If Q0 = 1, Q_1 = 0, then A = A + M
+    
+               ; Q0 = 0, Q_1 = 1, then A = A - M
+               sub eax, multiplicand
+               jmp shift
+    
+               addition:
+                    add eax, multiplicand
+    
+               shift:
+                   
+                    mov Q_1, ebx     
+                    and Q_1, 1
+    
+                    shr ebx, 1        
+                    rcr eax, 1        
+    
+               loop multiply_loop
+    
+        ; Store result
+        mov result, eax
+    
+        ; Display result
+        call WriteInt
+        call Crlf
+    
+        exit
+    main endp
+end main
