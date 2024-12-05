@@ -1,0 +1,49 @@
+.MODEL SMALL
+.STACK 100H
+
+.DATA
+    EVEN_MSG DB 'The given number is even', '$'
+    ODD_MSG  DB 'The given number is odd', '$'
+    PROMPT   DB 'Enter a number (0-9): $'
+
+.CODE
+START: 
+ MOV AX, @DATA
+    MOV DS, AX
+
+    ; Display prompt
+    MOV AH, 09H
+    LEA DX, PROMPT
+    INT 21H
+    MOV AH, 01H
+     INT 21H        
+
+    SUB AL, 30H   
+
+    MOV AH, 0      ; Clear AH for division
+    MOV BL, 2      ; Divisor (2)
+    DIV BL         ; AL / BL, result in AL (quotient), remainder in AH
+
+    ; AH contains the remainder (0 if even, 1 if odd)
+    CMP AH, 0
+    JE EVEN
+
+ODD:
+    ; Display "The given number is odd"
+    MOV AH, 09H
+    LEA DX, ODD_MSG
+    INT 21H
+    JMP EXIT
+
+EVEN:
+    ; Display "The given number is even"
+    MOV AH, 09H
+    LEA DX, EVEN_MSG
+    INT 21H
+
+EXIT:
+    ; Terminate the program
+    MOV AH, 4CH
+    INT 21H
+
+END START
