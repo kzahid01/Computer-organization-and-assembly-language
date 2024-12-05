@@ -1,0 +1,45 @@
+.MODEL SMALL
+.STACK 100H
+.DATA
+    newline DB 0DH, 0AH, '$'  ; For newline after each row
+    char DB ?                 ; To store character for printing
+
+.CODE
+.STARTUP
+
+    ; Outer loop initialization
+    MOV CX, 1  ; Start the row count from 1
+
+PATTERN_ROW:
+    ; Inner loop initialization
+    MOV AX, CX  ; Load current row number in AX
+    MOV BX, CX  ; Set BX to row number for count of characters in the row
+
+PATTERN_COL:
+    ; Convert number in CX to ASCII character
+    ADD AL, '0'
+    MOV DL, AL
+    MOV AH, 02H  ; DOS interrupt to display character
+    INT 21H
+
+    ; Restore AX for further iterations
+    MOV AL, CL
+
+    ; Decrement BX and repeat inner loop if BX > 0
+    DEC BX
+    JNZ PATTERN_COL
+
+    ; Print newline after each row
+    LEA DX, newline
+    MOV AH, 09H
+    INT 21H
+
+    ; Increment CX for the next row and check if we have reached row 5
+    INC CX
+    CMP CX, 6
+    JNZ PATTERN_ROW
+
+    ; Exit program
+    MOV AH, 4CH
+    INT 21H
+
