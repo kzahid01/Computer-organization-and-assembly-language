@@ -1,0 +1,50 @@
+.MODEL SMALL
+.STACK 100H
+
+.DATA
+    CHAR_ARRAY DB 'abcdefgh'
+    PROMPT      DB 'Enter a character (a-h): $'
+    FOUND_MSG   DB 'The character is found.$'
+    NOT_FOUND_MSG DB 'The character is not found.$'
+    INPUT_CHAR  DB ?, '$'
+
+.CODE
+START:
+    MOV AX, @DATA
+    MOV DS, AX
+
+    MOV AH, 09H
+    LEA DX, PROMPT
+    INT 21H
+
+    MOV AH, 01H
+    INT 21H
+    MOV INPUT_CHAR, AL
+
+    MOV CX, 8
+    LEA SI, CHAR_ARRAY
+
+SEARCH_LOOP:
+    MOV AL, [SI]
+    CMP AL, INPUT_CHAR
+    JE FOUND
+
+    INC SI
+    LOOP SEARCH_LOOP
+
+NOT_FOUND:
+    MOV AH, 09H
+    LEA DX, NOT_FOUND_MSG
+    INT 21H
+    JMP END_PROGRAM
+
+FOUND:
+    MOV AH, 09H
+    LEA DX, FOUND_MSG
+    INT 21H
+
+END_PROGRAM:
+    MOV AH, 4CH
+    INT 21H
+
+END START
